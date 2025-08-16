@@ -12,7 +12,7 @@ const postUsersHandlers = async (req, res) => {
 
 const getUsersHandlers = async (req, res) => {
   try {
-    const mensaje = await getUser();
+    const respuesta = await getUser();
     res.status(200).send(mensaje);
   } catch (error) {
     res.status(400).send(error);
