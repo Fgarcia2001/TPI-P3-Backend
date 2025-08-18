@@ -29,6 +29,14 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      categoriaId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "categorias",
+          key: "id",
+        },
+      },
     },
     {
       tableName: "productos",
