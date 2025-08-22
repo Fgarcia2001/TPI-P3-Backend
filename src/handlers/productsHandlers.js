@@ -1,6 +1,8 @@
 const {
   postProducts,
   getProducts,
+  putProducts,
+  deleteProducts,
 } = require("../controllers/productsControllers");
 
 const postProductsHandlers = async (req, res) => {
@@ -30,4 +32,31 @@ const getProductsHandlers = async (req, res) => {
   }
 };
 
-module.exports = { postProductsHandlers, getProductsHandlers };
+const putProductsHandlers = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const campos = req.body;
+    const productoActualizado = await putProducts(id, campos);
+    res.status(200).json(productoActualizado);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const deleteProductsHandlers = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const productoBorrado = await deleteProducts(id);
+    res.status(200).json(productoBorrado);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = {
+  postProductsHandlers,
+  getProductsHandlers,
+  putProductsHandlers,
+  deleteProductsHandlers,
+};

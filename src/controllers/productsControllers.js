@@ -92,4 +92,72 @@ const getProducts = async () => {
   }));
 };
 
-module.exports = { postProducts, getProducts };
+const putProducts = async (id, campos) => {
+  // 1. Verificar existencia del producto
+  const producto = await Producto.findByPk(id);
+  if (!producto) throw new Error("Producto no encontrado");
+
+  // 2. Validaciones de campos enviados
+  if (campos.nombre !== undefined) {
+    if (typeof campos.nombre !== "string" || !campos.nombre.trim()) {
+      throw new Error("El nombre debe ser un texto válido");
+    }
+  }
+
+  if (campos.descripcion !== undefined) {
+    if (typeof campos.descripcion !== "string" || !campos.descripcion.trim()) {
+      throw new Error("La descripción debe ser un texto válido");
+    }
+  }
+
+  if (campos.precio !== undefined) {
+    if (isNaN(campos.precio) || Number(campos.precio) <= 0) {
+      throw new Error("El precio debe ser un número mayor a 0");
+    }
+  }
+
+  if (campos.disponible !== undefined) {
+    if (typeof campos.disponible !== "boolean") {
+      throw new Error("Disponible debe ser true o false");
+    }
+  }
+
+  if (campos.imagen !== undefined) {
+    if (typeof campos.imagen !== "string" || !campos.imagen.trim()) {
+      throw new Error("La URL de la imagen debe ser un string válido");
+    }
+  }
+
+  // 3. Manejo de categoría
+  if (campos.categoria !== undefined) {
+    let categoriaDB = await Categoria.findOne({
+      where: { nombre: campos.categoria },
+    });
+
+    if (!categoriaDB) {
+      // Si no existe, la creo
+      categoriaDB = await Categoria.create({ nombre: campos.categoria });
+    }
+
+    // Asigno el id de la categoría al producto
+    campos.categoriaId = categoriaDB.id;
+    delete campos.categoria; // eliminamos el campo original para evitar conflicto
+  }
+
+  // 4. Actualizar producto solo con los campos enviados
+  await producto.update(campos);
+
+  return producto;
+};
+
+const deleteProducts = async (id) => {
+  //verifico si existe el producto
+  const producto = await Producto.findByPk(id);
+  if (!producto) throw new Error("Producto no encontrado");
+
+  // 2. Borrar el producto
+  await producto.destroy();
+
+  return `Producto con id ${id} eliminado correctamente`;
+};
+module.exports = { postProducts, getProducts, putProducts, deleteProducts };
