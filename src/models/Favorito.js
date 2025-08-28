@@ -10,9 +10,23 @@ module.exports = (sequelize) => {
         autoIncrement: true,
         allowNull: false,
       },
+      usuario_id: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+      },
+      producto_id: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+      },
     },
     {
       tableName: "favoritos",
+      indexes: [
+        {
+          unique: true,
+          fields: ["usuario_id", "producto_id"], // 🔒 evita duplicados
+        },
+      ],
     }
   );
 };
