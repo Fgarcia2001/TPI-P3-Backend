@@ -52,4 +52,22 @@ const getCategories = async () => {
   return categorias;
 };
 
-module.exports = { postCategories, getCategories };
+const deleteCategories = async (id) => {
+  // 1. Validar que venga un id
+  if (!id) throw new Error("Debe proporcionar un ID de categoría");
+
+  // 2. Validar que sea número
+  if (isNaN(id)) throw new Error("El ID debe ser un número válido");
+
+  // 3. Buscar la categoría
+  const categoria = await Categoria.findByPk(id);
+  if (!categoria) throw new Error(`No se encontró la categoría con id ${id}`);
+
+  // 4. Eliminarla
+  await categoria.destroy();
+
+  // 5. Retornar mensaje
+  return `Categoría ${categoria.nombre} eliminada correctamente`;
+};
+
+module.exports = { postCategories, getCategories, deleteCategories };
