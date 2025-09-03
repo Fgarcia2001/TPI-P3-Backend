@@ -9,7 +9,14 @@ const JWT_SECRET = process.env.JWT_SECRET || "clave_secreta_super_segura";
 //const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 // Crear usuario local (signup)
-const postUser = async ({ email, contrasena, nombre, apellido, telefono }) => {
+const postUser = async ({
+  email,
+  contrasena,
+  nombre,
+  apellido,
+  telefono,
+  rol,
+}) => {
   const existente = await Usuario.findOne({ where: { email } });
   if (existente) throw new Error("El usuario ya existe");
 
@@ -23,14 +30,22 @@ const postUser = async ({ email, contrasena, nombre, apellido, telefono }) => {
     nombre,
     apellido,
     telefono,
+    rol,
   });
+
+  const token = jwt.sign(
+    { id: nuevoUsuario.id, email: nuevoUsuario.email, rol: nuevoUsuario.rol },
+    JWT_SECRET,
+    { expiresIn: "1h" }
+  );
 
   return {
     message: "Usuario creado con éxito",
+    token,
     user: {
-      id: nuevoUsuario.id,
-      email: nuevoUsuario.email,
       nombre: nuevoUsuario.nombre,
+      apellido: nuevoUsuario.apellido,
+      telefono: nuevoUsuario.telefono,
     },
   };
 };

@@ -55,7 +55,8 @@ const postProducts = async ({
     precio: parseFloat(precio),
     disponible,
     imagen: imagen || null,
-    categoriaId: categoriaDB ? categoriaDB.id : null,
+    //categoriaId: categoriaDB ? categoriaDB.id : null,
+    categoriaId: categoriaDB.id,
   });
 
   return nuevoProducto;
