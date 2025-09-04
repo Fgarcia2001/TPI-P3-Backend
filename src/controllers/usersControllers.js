@@ -66,7 +66,15 @@ const getUser = async ({ email, contrasena }) => {
     { expiresIn: "1h" }
   );
 
-  return { message: "Login exitoso", token };
+  return {
+    message: "Login exitoso",
+    token,
+    user: {
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      telefono: usuario.telefono,
+    },
+  };
 };
 
 // Login con Google (sin cambios)

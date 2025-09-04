@@ -37,11 +37,11 @@ module.exports = (models) => {
   });
 
   Usuario.belongsToMany(Producto, {
-    through: Favorito,
+    through: "Favoritos",
     foreignKey: "usuario_id",
   });
   Producto.belongsToMany(Usuario, {
-    through: Favorito,
+    through: "Favoritos",
     foreignKey: "producto_id",
   });
 

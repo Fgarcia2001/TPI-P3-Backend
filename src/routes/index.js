@@ -9,4 +9,5 @@ router.use("/user", usersRouter);
 router.use("/products", productsRouter);
 router.use("/categories", categoriesRouter);
 router.use("/favorites", favoritesRouter);
+
 module.exports = router;
