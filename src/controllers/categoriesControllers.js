@@ -45,10 +45,6 @@ const getCategories = async () => {
     order: [["nombre", "ASC"]], // orden alfabético
   });
 
-  if (!categorias || categorias.length === 0) {
-    throw new Error("No hay categorías cargadas");
-  }
-
   return categorias;
 };
 

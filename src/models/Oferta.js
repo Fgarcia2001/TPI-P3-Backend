@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
   return sequelize.define(
-    "Aviso",
+    "Oferta",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -23,7 +23,7 @@ module.exports = (sequelize) => {
       },
     },
     {
-      tableName: "avisos",
+      tableName: "ofertas",
       timestamps: true, // Crea createdAt y updatedAt
     }
   );

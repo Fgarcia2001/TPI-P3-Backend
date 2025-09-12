@@ -32,7 +32,7 @@ module.exports = (sequelize) => {
         allowNull: true, // null si se registra con Google
       },
       rol: {
-        type: DataTypes.ENUM("cliente", "admin", "superadmin"),
+        type: DataTypes.ENUM("cliente", "admin", "sysadmin"),
         allowNull: false,
         defaultValue: "cliente",
       },

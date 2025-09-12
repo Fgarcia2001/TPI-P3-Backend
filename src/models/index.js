@@ -10,7 +10,7 @@ const Usuario = require("./Usuario")(sequelize);
 const HistorialPedido = require("./Historial_Pedido")(sequelize);
 //const Favorito = require("./Favorito")(sequelize);
 const Categoria = require("./Categoria")(sequelize);
-const Aviso = require("./Aviso")(sequelize);
+const Oferta = require("./Oferta")(sequelize);
 // Importar asociaciones y ejecutarlas
 const associate = require("./associations");
 associate({
@@ -23,7 +23,7 @@ associate({
   HistorialPedido,
   //Favorito,
   Categoria,
-  Aviso,
+  Oferta,
 });
 
 module.exports = {
@@ -35,7 +35,6 @@ module.exports = {
   Notificacion,
   Usuario,
   HistorialPedido,
-  //Favorito,
   Categoria,
-  Aviso,
+  Oferta,
 };

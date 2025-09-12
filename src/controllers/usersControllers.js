@@ -8,6 +8,8 @@ const JWT_SECRET = process.env.JWT_SECRET || "clave_secreta_super_segura";
 
 //const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
+const ROLES_VALIDOS = ["cliente", "admin", "sysadmin"];
+
 // Crear usuario local (signup)
 const postUser = async ({
   email,
@@ -36,7 +38,7 @@ const postUser = async ({
   const token = jwt.sign(
     { id: nuevoUsuario.id, email: nuevoUsuario.email, rol: nuevoUsuario.rol },
     JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "2h" }
   );
 
   return {
@@ -75,6 +77,81 @@ const getUser = async ({ email, contrasena }) => {
       telefono: usuario.telefono,
     },
   };
+};
+
+const getAllUsers = async () => {
+  const usuarios = await Usuario.findAll({
+    attributes: {
+      exclude: ["contrasena", "googleId", "createdAt", "updatedAt"],
+    },
+  });
+  return usuarios;
+};
+
+const putUser = async ({ id, rol }) => {
+  // 1. Validar que venga el id
+  if (!id) {
+    throw new Error("El parámetro 'id' es obligatorio");
+  }
+
+  // 2. Validar que sea un número entero positivo
+  if (isNaN(id) || parseInt(id) <= 0) {
+    throw new Error("El 'id' debe ser un número entero válido");
+  }
+
+  // 3. Validar que venga el rol
+  if (!rol) {
+    throw new Error("El campo 'rol' es obligatorio");
+  }
+
+  // 4. Validar que el rol sea uno de los permitidos
+  if (!ROLES_VALIDOS.includes(rol)) {
+    throw new Error(
+      `Rol inválido. Los roles permitidos son: ${ROLES_VALIDOS.join(", ")}`
+    );
+  }
+
+  // 5. Buscar el usuario
+  const usuario = await Usuario.findByPk(id);
+  if (!usuario) {
+    throw new Error(`Usuario con id ${id} no encontrado`);
+  }
+
+  // 6. Si ya tiene el mismo rol, avisar
+  if (usuario.rol === rol) {
+    throw new Error(`El usuario ya tiene el rol '${rol}'`);
+  }
+
+  // 7. Actualizar el rol
+  usuario.rol = rol;
+  await usuario.save();
+
+  // 8. Retornar el usuario actualizado (sin la contraseña por seguridad)
+  const { contrasena, ...usuarioSinPass } = usuario.toJSON();
+  return usuarioSinPass;
+};
+
+const deleteUser = async ({ id }) => {
+  // 1. Validar que venga id
+  if (!id) {
+    throw new Error("El parámetro 'id' es obligatorio");
+  }
+
+  // 2. Validar que sea un número válido
+  if (isNaN(id) || parseInt(id) <= 0) {
+    throw new Error("El 'id' debe ser un número entero válido");
+  }
+
+  // 3. Buscar usuario
+  const usuario = await Usuario.findByPk(id);
+  if (!usuario) {
+    throw new Error(`Usuario con id ${id} no encontrado`);
+  }
+
+  // 4. Eliminar usuario
+  await usuario.destroy();
+
+  return `Usuario con id ${id} eliminado correctamente`;
 };
 
 // Login con Google (sin cambios)
@@ -116,4 +193,10 @@ const getUser = async ({ email, contrasena }) => {
   };
 }; */
 
-module.exports = { postUser, getUser /*googleLogin*/ };
+module.exports = {
+  postUser,
+  getUser,
+  getAllUsers,
+  putUser,
+  deleteUser /*googleLogin*/,
+};
