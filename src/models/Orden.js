@@ -14,11 +14,10 @@ module.exports = (sequelize) => {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
-      estado_pago: {
-        type: DataTypes.TEXT,
-        validate: {
-          isIn: [["pendiente", "pagado", "efectivo"]],
-        },
+      estado: {
+        type: DataTypes.ENUM("pendiente", "aceptado", "cancelado"),
+        defaultValue: "pendiente",
+        allowNull: false,
       },
       total: {
         type: DataTypes.DECIMAL(10, 2),
