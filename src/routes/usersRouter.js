@@ -17,19 +17,19 @@ usersRouter.post("/signup", postUserHandlers);
 usersRouter.get(
   "/",
   authMiddleware,
-  roleMiddleware(["sysadmin"]),
+  roleMiddleware(["sysadmin", "admin"]),
   getUsersHandlers
 );
 usersRouter.put(
   "/:id",
   authMiddleware,
-  roleMiddleware(["sysadmin"]),
+  roleMiddleware(["sysadmin", "admin"]),
   putUserHandlers
 );
 usersRouter.delete(
   "/:id",
   authMiddleware,
-  roleMiddleware(["sysadmin"]),
+  roleMiddleware(["sysadmin", "admin"]),
   deleteUserHandler
 );
 //usersRouter.post("/google-login", googleUsersHandlers);

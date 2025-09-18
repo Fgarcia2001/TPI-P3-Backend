@@ -1,7 +1,7 @@
 const { Orden, Producto } = require("../models");
 
 const postOrders = async (usuario_id, productos) => {
-  // 1. Calcular el total de la orden
+  // 1. Calcular el total
   let total = 0;
   for (const item of productos) {
     const producto = await Producto.findByPk(item.id);
@@ -16,7 +16,7 @@ const postOrders = async (usuario_id, productos) => {
     estado: "pendiente",
   });
 
-  // 3. Asociar productos a la orden (muchos a muchos)
+  // 3. Asociar productos
   for (const item of productos) {
     const producto = await Producto.findByPk(item.id);
     await orden.addProducto(producto, {
@@ -24,15 +24,35 @@ const postOrders = async (usuario_id, productos) => {
     });
   }
 
-  // 4. Devolver la orden con los productos incluidos
+  // 4. Buscar la orden con productos (filtrando atributos)
   const ordenConProductos = await Orden.findByPk(orden.id, {
-    include: {
-      model: Producto,
-      through: { attributes: ["cantidad", "precio"] },
-    },
+    attributes: ["id", "fecha", "estado", "total", "usuario_id"],
+    include: [
+      {
+        model: Producto,
+        attributes: ["id", "nombre", "precio"], // solo estas columnas
+        through: {
+          attributes: ["cantidad", "precio"], // recuperamos para transformarlo
+        },
+      },
+    ],
   });
 
-  return ordenConProductos;
+  // 5. Transformar la respuesta
+  const ordenFinal = {
+    ...ordenConProductos.toJSON(),
+    Productos: ordenConProductos.Productos.map((prod) => ({
+      id: prod.id,
+      nombre: prod.nombre,
+      precio: prod.precio,
+      OrdenProducto: {
+        cantidad: prod.OrdenProducto.cantidad,
+        subtotal: prod.OrdenProducto.cantidad * prod.precio, // calculamos subtotal
+      },
+    })),
+  };
+
+  return ordenFinal;
 };
 
 module.exports = { postOrders };
