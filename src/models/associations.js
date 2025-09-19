@@ -18,6 +18,7 @@ module.exports = (models) => {
   Orden.belongsToMany(Producto, {
     through: OrdenProducto,
     foreignKey: "orden_id",
+    onDelete: "CASCADE",
   });
   Producto.belongsToMany(Orden, {
     through: OrdenProducto,
