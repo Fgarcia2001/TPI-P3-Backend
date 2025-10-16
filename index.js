@@ -15,7 +15,7 @@ setupSocket(io);
 
 // Sincroniza la base de datos y luego inicia el servidor
 sequelize
-  .sync({ alter: true })
+  .sync({ alter: false })
   .then(() => {
     server.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);

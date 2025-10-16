@@ -78,7 +78,7 @@ const getProducts = async () => {
 
   // Verificamos si no hay productos
   if (!productos || productos.length === 0) {
-    throw new Error("No hay productos cargados en la base de datos.");
+    return [];
   }
 
   // Convertimos a JSON simple (opcional)
