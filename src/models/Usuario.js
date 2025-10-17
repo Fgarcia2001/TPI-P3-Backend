@@ -26,6 +26,7 @@ module.exports = (sequelize) => {
       telefono: {
         type: DataTypes.TEXT,
         allowNull: true,
+        unique: true,
       },
       contrasena: {
         type: DataTypes.TEXT,

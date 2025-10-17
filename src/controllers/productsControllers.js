@@ -157,7 +157,18 @@ const deleteProducts = async (id) => {
   if (!producto) throw new Error("Producto no encontrado");
 
   // 2. Borrar el producto
+
+  const categoriaId = producto.categoriaId;
+
   await producto.destroy();
+  const productosRestantes = await Producto.count({
+    where: { categoriaId },
+  });
+
+  if (productosRestantes === 0) {
+    await Categoria.destroy({ where: { id: categoriaId } });
+    //Eliminamos la categoria si no existen mas productos con esa misma
+  }
 
   return `Producto con id ${id} eliminado correctamente`;
 };

@@ -7,11 +7,11 @@ const Usuario = require("./Usuario")(sequelize);
 const Categoria = require("./Categoria")(sequelize);
 const associate = require("./associations");
 const OrdenProducto = require("./OrdenProducto")(sequelize);
+const Oferta = require("./Oferta")(sequelize);
 //const Notificacion = require("./Notificacion")(sequelize);
 //const Mesa = require("./Mesa")(sequelize);
 //const HistorialPedido = require("./Historial_Pedido")(sequelize);
 //const Favorito = require("./Favorito")(sequelize);
-//const Oferta = require("./Oferta")(sequelize);
 // Importar asociaciones y ejecutarlas
 associate({
   Producto,
@@ -19,11 +19,11 @@ associate({
   OrdenProducto,
   Usuario,
   Categoria,
+  Oferta,
   //Mesa,
   //Notificacion,
   //HistorialPedido,
   //Favorito,
-  //Oferta,
 });
 
 module.exports = {
@@ -33,5 +33,5 @@ module.exports = {
   OrdenProducto,
   Usuario,
   Categoria,
-  //Oferta,
+  Oferta,
 };
