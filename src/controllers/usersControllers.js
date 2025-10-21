@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "clave_secreta_super_segura";
 
 const ROLES_VALIDOS = ["cliente", "admin", "sysadmin"];
 
-// Crear usuario local (signup)
+// registro de usuario
 const postUser = async ({
   email,
   contrasena,
@@ -19,10 +19,38 @@ const postUser = async ({
   telefono,
   rol,
 }) => {
-  const existente = await Usuario.findOne({ where: { email } });
-  if (existente) throw new Error("El usuario ya existe");
 
-  // 🔑 Hashear la contraseña antes de guardar
+  if (!email || !contrasena || !nombre || !apellido || !telefono) {
+    throw new Error("Todos los campos son obligatorios");
+  }
+
+  // Validamos email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    throw new Error("El formato del email no es válido");
+  }
+
+   if (contrasena.length < 5) {
+    throw new Error("La contraseña debe tener al menos 5 caracteres");
+  }
+
+  // Validamos telefono con solo numeros
+  const telefonoRegex = /^[0-9]+$/;
+  if (!telefonoRegex.test(telefono)) {
+    throw new Error("El teléfono debe contener solo números");
+  }
+
+  // Validamos que el mail no este registrado
+
+  const existente = await Usuario.findOne({ where: { email } });
+  if (existente) throw new Error("Email ya registrado");
+
+  // Validamos que el telefono no este registrado
+
+   const telefonoExistente = await Usuario.findOne({ where: { telefono } });
+  if (telefonoExistente) throw new Error("El teléfono ya está registrado");
+
+  //hashear la contraseña antes de guardar
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(contrasena, saltRounds);
 
@@ -40,7 +68,7 @@ const postUser = async ({
     JWT_SECRET,
     { expiresIn: "2h" }
   );
-
+  
   return {
     message: "Usuario creado con éxito",
     token,
@@ -52,8 +80,11 @@ const postUser = async ({
   };
 };
 
-// Login local
+// login de usuario
 const getUser = async ({ email, contrasena }) => {
+
+  //Validamos si existe el email primero
+
   const usuario = await Usuario.findOne({ where: { email } });
   if (!usuario) throw new Error("Usuario no encontrado");
 
@@ -65,7 +96,7 @@ const getUser = async ({ email, contrasena }) => {
   const token = jwt.sign(
     { id: usuario.id, email: usuario.email, rol: usuario.rol },
     JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "2h" }
   );
 
   return {
@@ -85,6 +116,7 @@ const getAllUsers = async () => {
       exclude: ["contrasena", "googleId", "createdAt", "updatedAt"],
     },
   });
+  // si no existe usuarios igualmente retorno array vacio
   return usuarios;
 };
 

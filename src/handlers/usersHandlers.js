@@ -77,7 +77,7 @@ const deleteUserHandler = async (req, res) => {
 module.exports = {
   postUserHandlers,
   getUserHandlers,
-  getUsersHandlers /*googleUserHanders*/,
+  getUsersHandlers,
   putUserHandlers,
   deleteUserHandler,
 };
