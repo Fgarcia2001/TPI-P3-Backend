@@ -42,7 +42,7 @@ const getFavorites = async (usuario_id) => {
 
   // 2. Valido si tiene favoritos
   if (!usuario.Productos || usuario.Productos.length === 0) {
-    return { message: "El usuario no tiene favoritos" };
+    return [];
   }
 
   // 3. Devuelvo solo los productos favoritos
