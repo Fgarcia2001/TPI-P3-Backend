@@ -88,6 +88,7 @@ const getUser = async ({ email, contrasena }) => {
   //Validamos si existe el email primero
 
   email = email.toLowerCase().trim();
+
   const usuario = await Usuario.findOne({ where: { email } });
   if (!usuario) throw new Error("Usuario no encontrado");
 
@@ -154,14 +155,14 @@ const putUser = async ({ id, rol }) => {
 
   // 6. Si ya tiene el mismo rol, avisar
   if (usuario.rol === rol) {
-    return { message: `El usuario ya tiene el rol ${rol}` };
+    throw new Error(`El usuario ya tiene el rol ${rol}`);
   }
 
   // 7. Actualizar el rol
   usuario.rol = rol;
   await usuario.save();
 
-  // 8. Retornar el usuario actualizado (sin la contraseña por seguridad)
+  // 8. Retornar el usuario actualizado (sin la contrasenia por seguridad)
   const { contrasena, ...usuarioSinPass } = usuario.toJSON();
   return usuarioSinPass;
 };
