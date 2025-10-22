@@ -87,6 +87,7 @@ const postUser = async ({
 const getUser = async ({ email, contrasena }) => {
   //Validamos si existe el email primero
 
+  email = email.toLowerCase().trim();
   const usuario = await Usuario.findOne({ where: { email } });
   if (!usuario) throw new Error("Usuario no encontrado");
 
