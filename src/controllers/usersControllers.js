@@ -19,10 +19,13 @@ const postUser = async ({
   telefono,
   rol,
 }) => {
-
   if (!email || !contrasena || !nombre || !apellido || !telefono) {
     throw new Error("Todos los campos son obligatorios");
   }
+
+  email = email.toLowerCase().trim();
+  nombre = nombre.toLowerCase().trim();
+  apellido = apellido.toLowerCase().trim();
 
   // Validamos email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,7 +33,7 @@ const postUser = async ({
     throw new Error("El formato del email no es válido");
   }
 
-   if (contrasena.length < 5) {
+  if (contrasena.length < 5) {
     throw new Error("La contraseña debe tener al menos 5 caracteres");
   }
 
@@ -47,7 +50,7 @@ const postUser = async ({
 
   // Validamos que el telefono no este registrado
 
-   const telefonoExistente = await Usuario.findOne({ where: { telefono } });
+  const telefonoExistente = await Usuario.findOne({ where: { telefono } });
   if (telefonoExistente) throw new Error("El teléfono ya está registrado");
 
   //hashear la contraseña antes de guardar
@@ -68,7 +71,7 @@ const postUser = async ({
     JWT_SECRET,
     { expiresIn: "2h" }
   );
-  
+
   return {
     message: "Usuario creado con éxito",
     token,
@@ -82,7 +85,6 @@ const postUser = async ({
 
 // login de usuario
 const getUser = async ({ email, contrasena }) => {
-
   //Validamos si existe el email primero
 
   const usuario = await Usuario.findOne({ where: { email } });
@@ -151,7 +153,7 @@ const putUser = async ({ id, rol }) => {
 
   // 6. Si ya tiene el mismo rol, avisar
   if (usuario.rol === rol) {
-    throw new Error(`El usuario ya tiene el rol '${rol}'`);
+    return { message: `El usuario ya tiene el rol ${rol}` };
   }
 
   // 7. Actualizar el rol

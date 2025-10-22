@@ -5,7 +5,7 @@ const postOffers = async (imagen) => {
   }
   const ofertaExistente = await Oferta.findOne({ where: { imagen } });
   if (ofertaExistente) {
-    return "Ya existe una oferta con esa imagen";
+    return { message: "Ya existe una oferta con esa imagen" };
   }
 
   //Posteamos la oferta una vez que este todo validado
@@ -19,10 +19,10 @@ const deleteOffer = async (id) => {
   }
   const oferta = await Oferta.findByPk(id);
   if (!oferta) {
-    return "Esta oferta no existe o ya fue eliminada";
+    return { message: "Esta oferta no existe o ya fue eliminada" };
   }
   await oferta.destroy();
-  return `La oferta con ID ${id} fue eliminada correctamente`;
+  return { message: `La oferta con ID ${id} fue eliminada correctamente` };
 };
 
 const getOffers = async () => {
